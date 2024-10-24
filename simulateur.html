@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur de Prêt - La Poste du Bénin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #003366;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        header img {
+            max-height: 80px;
+        }
+        main {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1, h2 {
+            color: #003366;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input {
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #ffcc00;
+            color: #003366;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #003366;
+            color: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #003366;
+            color: white;
+        }
+        td {
+            background-color: #f9f9f9;
+        }
+        footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://www.laposte.bj/logo.png" alt="La Poste du Bénin">
+        <h1>Simulateur de Prêt Spécial</h1>
+    </header>
+
+    <main>
+        <h2>Calculateur de prêt pour les employés de La Poste du Bénin</h2>
+        <p>Veuillez entrer les informations ci-dessous pour calculer votre prêt.</p>
+        
+        <form id="loanForm">
+            <label for="salary">Salaire Net (en FCFA) :</label>
+            <input type="number" id="salary" name="salary" required>
+
+            <label for="seniority">Années d'ancienneté :</label>
+            <input type="number" id="seniority" name="seniority" required>
+
+            <label for="age">Âge actuel :</label>
+            <input type="number" id="age" name="age" required>
+
+            <button type="button" onclick="calculateLoan()">Calculer</button>
+        </form>
+
+        <h2>Résultats :</h2>
+        <div id="results">
+            <p><strong>Montant du prêt :</strong> <span id="loanAmount"></span> FCFA</p>
+            <p><strong>Mensualité :</strong> <span id="monthlyPayment"></span> FCFA</p>
+            <p><strong>Date de fin du prêt :</strong> <span id="endDate"></span></p>
+            <p><strong>Montant total à rembourser :</strong> <span id="totalRepayment"></span> FCFA</p>
+            <p><strong>Montant total des intérêts :</strong> <span id="totalInterest"></span> FCFA</p>
+        </div>
+
+        <h2>Tableau d'Amortissement :</h2>
+        <table id="amortizationTable">
+            <thead>
+                <tr>
+                    <th>Mois</th>
+                    <th>Capital restant dû</th>
+                    <th>Intérêts</th>
+                    <th>Principal</th>
+                    <th>Mensualité</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </main>
+
+    <footer>
+        &copy; 2024 La Poste du Bénin - Tous droits réservés
+    </footer>
+
+    <script>
+        function calculateLoan() {
+            const salary = parseFloat(document.getElementById("salary").value);
+            const seniority = parseInt(document.getElementById("seniority").value);
+            const age = parseInt(document.getElementById("age").value);
+
+            // Définir les paramètres du prêt selon l'ancienneté
+            let loanDuration;
+            if (seniority >= 2 && seniority < 5) {
+                loanDuration = 36;
+            } else if (seniority >= 5 && seniority < 10) {
+                loanDuration = 60;
+            } else if (seniority >= 10 && seniority < 15) {
+                loanDuration = 84;
+            } else if (seniority >= 15) {
+                loanDuration = 120;
+            } else {
+                alert("L'ancienneté est insuffisante pour bénéficier d'un prêt.");
+                return;
+            }
+
+            // Vérifier l'âge maximum
+            const maxAge = 60;
+            const endAge = age + (loanDuration / 12);
+            if (endAge > maxAge) {
+                alert("Le prêt dépasse la limite d'âge de 60 ans.");
+                return;
+            }
+
+            // Calcul de la quotité cessible (45% du salaire net)
+            const cessionQuotity = 0.45;
+            const maxLoanPayment = salary * cessionQuotity;
+
+            // Calcul du montant du prêt (en fonction de la mensualité)
+            const interestRate = 0.05; // 5% HT
+            const monthlyRate = interestRate / 12;
+            const loanAmount = (maxLoanPayment * (1 - Math.pow(1 + monthlyRate, -loanDuration))) / monthlyRate;
+
+            // Calcul du montant total à rembourser et du total des intérêts
+            const totalRepayment = maxLoanPayment * loanDuration;
+            const totalInterest = totalRepayment - loanAmount;
+
+            // Affichage des résultats
+            document.getElementById("loanAmount").innerText = loanAmount.toFixed(2);
+            document.getElementById("monthlyPayment").innerText = maxLoanPayment.toFixed(2);
+            document.getElementById("totalRepayment").innerText = totalRepayment.toFixed(2);
+            document.getElementById("totalInterest").innerText = totalInterest.toFixed(2);
+
+            // Calcul de la date de fin
+            const endDate = new Date();
+            endDate.setMonth(endDate.getMonth() + loanDuration);
+            document.getElementById("endDate").innerText = endDate.toLocaleDateString();
+
+            // Générer le tableau d'amortissement
+            generateAmortizationTable(loanAmount, loanDuration, monthlyRate, maxLoanPayment);
+        }
+
+        function generateAmortizationTable(loanAmount, loanDuration, monthlyRate, monthlyPayment) {
+            const tableBody = document.querySelector("#amortizationTable tbody");
+            tableBody.innerHTML = ''; // Clear previous data
+
+            let remainingBalance = loanAmount;
+
+            for (let i = 1; i <= loanDuration; i++) {
+                const interest = remainingBalance * monthlyRate;
+                const principal = monthlyPayment - interest;
+                remainingBalance -= principal;
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${i}</td>
+                    <td>${remainingBalance.toFixed(2)}</td>
+                    <td>${interest.toFixed(2)}</td>
+                    <td>${principal.toFixed(2)}</td>
+                    <td>${monthlyPayment.toFixed(2)}</td>
+                `;
+                tableBody.appendChild(row);
+            }
+        }
+    </script>
+</body>
+</html>
