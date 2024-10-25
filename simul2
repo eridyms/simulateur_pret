@@ -296,7 +296,7 @@
             const monthlyRate = annualRate / 12;
 
             // Calcul du montant total du prêt
-            const loanAmount = maxLoanPayment * loanDuration / ((1 - Math.pow(1 + monthlyRate, -loanDuration)) / monthlyRate);
+            const loanAmount = (maxLoanPayment * (1 - Math.pow(1 + monthlyRate, -loanDuration))) / monthlyRate;
 
             // Calcul des résultats
             const monthlyPayment = loanAmount * monthlyRate / (1 - Math.pow(1 + monthlyRate, -loanDuration));
