@@ -118,7 +118,7 @@
 <body>
     <header>
         <img src="laposte.png" alt="La Poste du Bénin">
-        <h1>Simulateur de Prêt Spécial</h1>
+        <h1>Simulateur d'avance sur Epargne</h1>
     </header>
 
     <main>
@@ -190,7 +190,7 @@
                     <td id="displayLoanDuration"></td>
                 </tr>
                 <tr>
-                    <th>Durée maximal possible (en mois) :</th>
+                    <th>Durée maximale possible (en mois) :</th>
                     <td id="displaymaxAllowedDurationByAge"></td>
                 </tr>
                 </table>
@@ -324,14 +324,14 @@
             } else if (seniority > 15) {
                 maxDurationBySeniority = 120;
             } else {
-                alert("Ancienneté insuffisante pour bénéficier d'un prêt.");
+                alert("Votre ancienneté est insuffisante pour bénéficier d'un prêt.");
                 return;
             }
             let displaysmaxduration;
             // Ajuster la durée si elle dépasse la limite définie par l'ancienneté
             if (loanDuration > maxDurationBySeniority) {
                 loanDuration = maxDurationBySeniority;
-                alert(`Durée ajustée à ${loanDuration} mois en fonction de l'ancienneté.`);
+                alert(`La durée de votre prêt a été ajustée à ${loanDuration} mois en fonction votre l'ancienneté.`);
                 displaysmaxduration= maxDurationBySeniority;
             }
           else {
@@ -344,7 +344,7 @@
             if (possibleLoanEndAge > maxLoanEndAge) {
                 const maxDurationByAge = (maxLoanEndAge - age) * 12;
                 loanDuration = Math.min(loanDuration, maxDurationByAge);
-                alert(`Durée ajustée à ${loanDuration} mois pour respecter la limite d'âge de 60 ans.`);
+                alert(`La durée de votre prêt a été ajustée à ${loanDuration} mois pour respecter la limite d'âge de 60 ans.`);
                 displaysmaxduration= maxDurationByAge;
             }
           else {
