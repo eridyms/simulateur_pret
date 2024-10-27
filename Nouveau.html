@@ -150,6 +150,7 @@
                         <option value="Mutuelle">Mutuelle</option>
                         <option value="Epargne Retraite">Epargne Retraite</option>
                         <option value="Cotisation syndicale">Cotisation syndicale</option>
+                        <option value="Amortissement véhicule">Amortissement véhicule</option>
                         <option value="Prélèvement Adogbè">Prélèvement Adogbè</option>
                         <option value="Autres">Autres</option>
                     </select>
@@ -164,7 +165,7 @@
             <input type="number" id="seniority" name="seniority" required>
 
             <label for="age">Âge actuel :</label>
-            <input type="number" id="age" name="age" required>
+            <input type="number" id="age" name="age" required max="60" placeholder="60 ans maximum">
 
             <label for="loanDuration">Durée du prêt (en mois) :</label>
             <input type="number" id="loanDuration" name="loanDuration" required>
@@ -308,6 +309,11 @@
             */
 // Mes nouveau ajouts
  // Définir la durée maximale autorisée en fonction de l'ancienneté
+          
+          if (age > 60) {
+        alert("L'âge ne peut pas dépasser 60 ans.");
+        return; // Arrête le calcul si la condition n'est pas respectée
+    }
             let maxDurationBySeniority;
             if (seniority >= 2 && seniority <= 5) {
                 maxDurationBySeniority = 36;
@@ -326,9 +332,9 @@
             if (loanDuration > maxDurationBySeniority) {
                 loanDuration = maxDurationBySeniority;
                 alert(`Durée ajustée à ${loanDuration} mois en fonction de l'ancienneté.`);
-                displaysmaxduration= maxDurationBySeniority; 
+                displaysmaxduration= maxDurationBySeniority;
             }
-            else {
+          else {
                 displaysmaxduration= maxDurationBySeniority; 
                       }
 
@@ -341,7 +347,7 @@
                 alert(`Durée ajustée à ${loanDuration} mois pour respecter la limite d'âge de 60 ans.`);
                 displaysmaxduration= maxDurationByAge;
             }
-            else {
+          else {
                 displaysmaxduration= maxDurationBySeniority; 
                       }
 
