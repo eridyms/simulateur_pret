@@ -1,1 +1,375 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur de Prêt - La Poste du Bénin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #003366;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        header img {
+            max-height: 80px;
+        }
+        main {
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1, h2 {
+            color: #003366;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input, select {
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #ffcc00;
+            color: #003366;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #003366;
+            color: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #003366;
+            color: white;
+        }
+        td {
+            background-color: #f9f9f9;
+        }
+        footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        .considered-data {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+        .considered-data h3 {
+            margin-top: 0;
+        }
+        .considered-data table {
+            width: 100%;
+            border: none;
+            margin: 0;
+        }
+        .considered-data th, .considered-data td {
+            text-align: left;
+            padding: 8px;
+            border: none;
+        }
+        .engagements {
+            margin-top: 10px;
+        }
+        .engagement {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="laposte.png" alt="La Poste du Bénin">
+        <h1>Simulateur de Prêt Spécial</h1>
+    </header>
 
+    <main>
+        <h2>Simulateur Avance sur Epargne pour les employés de La Poste du Bénin</h2>
+        <p>Veuillez entrer les informations ci-dessous en vous référant à votre fiche de paie non trimestrielle pour calculer votre avance sur Epargne.</p>
+        
+        <form id="loanForm">
+            <label for="salary">TOTAL GAINS (en FCFA) :</label>
+            <input type="number" id="salary" name="salary" required>
+
+            <label for="cnss">Montant Cotisation CNSS (en FCFA) :</label>
+            <input type="number" id="cnss" name="cnss" required>
+
+            <label for="ipts">Montant IPTS (en FCFA) :</label>
+            <input type="number" id="ipts" name="ipts" required>
+
+            <label for="caisseSecours">Montant Caisse Secours (en FCFA) :</label>
+            <select id="caisseSecours" name="caisseSecours" required>
+                <option value="8000">8000 FCFA</option>
+                <option value="10000">10000 FCFA</option>
+                <option value="12000">12000 FCFA</option>
+            </select>
+
+            <div class="engagements" id="engagements">
+                <h3>Engagements (ajoutez si nécessaire)</h3>
+                <div class="engagement">
+                    <label for="engagementType">Type d'engagement :</label>
+                    <select class="engagementType" required onchange="updateEngagementOptions()">
+                        <option value="Mutuelle">Mutuelle</option>
+                        <option value="Epargne Retraite">Epargne Retraite</option>
+                        <option value="Cotisation syndicale">Cotisation syndicale</option>
+                        <option value="Prélèvement Adogbè">Prélèvement Adogbè</option>
+                        <option value="Autres">Autres</option>
+                    </select>
+                    <label for="engagementAmount">Montant (en FCFA) :</label>
+                    <input type="number" class="engagementAmount" required>
+                    <button type="button" onclick="removeEngagement(this)">Retirer</button>
+                </div>
+            </div>
+            <button type="button" onclick="addEngagement()">Ajouter un engagement</button>
+
+            <label for="seniority">Années d'ancienneté :</label>
+            <input type="number" id="seniority" name="seniority" required>
+
+            <label for="age">Âge actuel :</label>
+            <input type="number" id="age" name="age" required>
+
+            <label for="loanDuration">Durée du prêt (en mois) :</label>
+            <input type="number" id="loanDuration" name="loanDuration" required>
+
+            <button type="button" onclick="calculateLoan()">Calculer</button>
+        </form>
+
+        <!-- Rubrique "Données considérées" -->
+        <div class="considered-data" id="consideredData" style="display:none;">
+            <h3>Données considérées</h3>
+            <table>
+                <tr>
+                    <th>Salaire Net Considéré :</th>
+                    <td id="displayNetConsidered"></td>
+                </tr>
+                <tr>
+                    <th>Montant de la Quotité (45%) :</th>
+                    <td id="displayQuotity"></td>
+                </tr>
+                <tr>
+                    <th>Durée du prêt (en mois) :</th>
+                    <td id="displayLoanDuration"></td>
+                </tr>
+                <tr>
+                    <th>Durée maximal possible (en mois) :</th>
+                    <td id="displaymaxAllowedDurationByAge"></td>
+                </tr>
+                </table>
+        </div>
+
+        <h2>Résultats :</h2>
+        <div id="results">
+            <p><strong>Montant du prêt :</strong> <span id="loanAmount"></span> FCFA</p>
+            <p><strong>Mensualité :</strong> <span id="monthlyPayment"></span> FCFA</p>
+            <p><strong>Date de fin du prêt :</strong> <span id="endDate"></span></p>
+            <p><strong>Montant Garantie solidaire :</strong> <span id="gloanAmount"></span> FCFA</p>
+            <p><strong>Montant total à rembourser :</strong> <span id="totalRepayment"></span> FCFA</p>
+            <p><strong>Montant total des intérêts :</strong> <span id="totalInterest"></span> FCFA</p>
+        </div>
+
+        <h2>Tableau d'Amortissement :</h2>
+        <table id="amortizationTable">
+            <thead>
+                <tr>
+                    <th>Mois</th>
+                    <th>Capital restant dû</th>
+                    <th>Intérêts</th>
+                    <th>Principal</th>
+                    <th>Mensualité</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </main>
+
+    <footer>
+        &copy; 2024 La Poste du Bénin - Tous droits réservés
+    </footer>
+
+    <script>
+        const engagementTypes = [
+            "Mutuelle",
+            "Epargne Retraite",
+            "Cotisation syndicale",
+            "Prélèvement Adogbè",
+            "Autres"
+        ];
+
+        function updateEngagementOptions() {
+            const engagementSelects = document.querySelectorAll(".engagementType");
+            const usedEngagements = [...engagementSelects].map(select => select.value);
+            engagementSelects.forEach(select => {
+                const options = [...select.options];
+                options.forEach(option => {
+                    option.disabled = usedEngagements.includes(option.value) && option.value !== select.value;
+                });
+            });
+        }
+
+        function addEngagement() {
+            const engagementsDiv = document.getElementById("engagements");
+            const newEngagement = document.createElement("div");
+            newEngagement.classList.add("engagement");
+            newEngagement.innerHTML = `
+                <label for="engagementType">Type d'engagement :</label>
+                <select class="engagementType" required onchange="updateEngagementOptions()">
+                    <option value="Mutuelle">Mutuelle</option>
+                    <option value="Epargne Retraite">Epargne Retraite</option>
+                    <option value="Cotisation syndicale">Cotisation syndicale</option>
+                    <option value="Prélèvement Adogbè">Prélèvement Adogbè</option>
+                    <option value="Autres">Autres</option>
+                </select>
+                <label for="engagementAmount">Montant (en FCFA) :</label>
+                <input type="number" class="engagementAmount" required>
+                <button type="button" onclick="removeEngagement(this)">Retirer</button>
+            `;
+            engagementsDiv.appendChild(newEngagement);
+            updateEngagementOptions();
+        }
+
+        function removeEngagement(button) {
+            const engagement = button.parentElement;
+            engagement.remove();
+            updateEngagementOptions();
+        }
+
+        function calculateLoan() {
+            const salary = parseFloat(document.getElementById("salary").value);
+            const cnss = parseFloat(document.getElementById("cnss").value);
+            const ipts = parseFloat(document.getElementById("ipts").value);
+            const caisseSecours = parseFloat(document.getElementById("caisseSecours").value);
+            const seniority = parseInt(document.getElementById("seniority").value);
+            const age = parseInt(document.getElementById("age").value);
+           // const loanDuration = parseInt(document.getElementById("loanDuration").value);
+  // mes ajouts
+        
+        let loanDuration = parseInt(document.getElementById("loanDuration").value);
+        // Déterminer la durée maximale en fonction de l'ancienneté
+        let maxDuration;
+        if (seniority >= 2 && seniority < 5) maxDuration = 36;
+        else if (seniority >= 5 && seniority <= 10) maxDuration = 60;
+        else if (seniority > 10 && seniority <= 15) maxDuration = 84;
+        else if (seniority > 15) maxDuration = 120;
+        else {
+            alert("Ancienneté insuffisante pour bénéficier d'une avance.");
+            return;
+        }
+
+// Vérifier l'âge et ajuster la durée maximale
+        const maxAllowedDurationByAge = (60 - age) * 12; // en mois
+        if (loanDuration > maxDuration) loanDuration = maxDuration;
+        if (loanDuration > maxAllowedDurationByAge) loanDuration = maxAllowedDurationByAge;
+          alert("Votre âge ne vous permet plus de beneficier de cette durée pour le prêt.");
+            return;
+        if (loanDuration <= 0) {
+            alert("La durée du prêt doit être valide en fonction de l'âge.");
+            return;
+        }
+          
+            // Calculer le salaire net considéré
+            let salaryNetConsidered = salary - cnss - ipts - caisseSecours;
+
+            // Ajouter les engagements
+            const engagementAmounts = document.querySelectorAll(".engagementAmount");
+            engagementAmounts.forEach(amount => {
+                salaryNetConsidered -= parseFloat(amount.value) || 0;
+            });
+
+            // Calcul de la quotité (45%)
+            const maxLoanPayment = salaryNetConsidered * 0.45;
+
+            // Afficher les données considérées
+            document.getElementById("displayNetConsidered").innerText = salaryNetConsidered.toFixed(2) + " FCFA";
+            document.getElementById("displayQuotity").innerText = maxLoanPayment.toFixed(2) + " FCFA";
+            document.getElementById("displayLoanDuration").innerText = loanDuration + " mois";
+            document.getElementById("displaymaxAllowedDurationByAge").innerText = maxAllowedDurationByAge + " mois";
+            document.getElementById("consideredData").style.display = "block";
+
+            // Taux d'intérêt mensuel
+            const annualRate = 0.05;
+            const monthlyRate = annualRate / 12;
+
+            // Calcul du montant total du prêt
+            const loanAmount = (maxLoanPayment * (1 - Math.pow(1 + monthlyRate, -loanDuration))) / monthlyRate;
+            
+          // Calcul de la garantie (3%)
+            const gLoanPayment = loanAmount * 0.03;
+
+            // Calcul des résultats
+            const monthlyPayment = loanAmount * monthlyRate / (1 - Math.pow(1 + monthlyRate, -loanDuration));
+            const totalRepayment = monthlyPayment * loanDuration;
+            const totalInterest = totalRepayment - loanAmount;
+
+            // Date de fin du prêt
+            const currentDate = new Date();
+            const endDate = new Date(currentDate.setMonth(currentDate.getMonth() + loanDuration));
+
+            // Affichage des résultats
+            document.getElementById("loanAmount").innerText = loanAmount.toFixed(2);
+            document.getElementById("monthlyPayment").innerText = monthlyPayment.toFixed(2);
+            document.getElementById("totalRepayment").innerText = totalRepayment.toFixed(2);
+            document.getElementById("totalInterest").innerText = totalInterest.toFixed(2);
+            document.getElementById("gloanAmount").innerText = gLoanPayment.toFixed(2);
+            document.getElementById("endDate").innerText = endDate.toLocaleDateString();
+
+            // Tableau d'amortissement
+            const tableBody = document.querySelector("#amortizationTable tbody");
+            tableBody.innerHTML = "";
+            let remainingBalance = loanAmount;
+            for (let i = 1; i <= loanDuration; i++) {
+                const interest = remainingBalance * monthlyRate;
+                const principal = monthlyPayment - interest;
+                remainingBalance -= principal;
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${i}</td>
+                    <td>${remainingBalance.toFixed(2)}</td>
+                    <td>${interest.toFixed(2)}</td>
+                    <td>${principal.toFixed(2)}</td>
+                    <td>${monthlyPayment.toFixed(2)}</td>
+                `;
+                tableBody.appendChild(row);
+            }
+        }
+    </script>
+</body>
+</html>
