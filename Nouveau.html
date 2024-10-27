@@ -326,8 +326,11 @@
             if (loanDuration > maxDurationBySeniority) {
                 loanDuration = maxDurationBySeniority;
                 alert(`Durée ajustée à ${loanDuration} mois en fonction de l'ancienneté.`);
-                displaysmaxduration= maxDurationBySeniority;
+                displaysmaxduration= maxDurationBySeniority; 
             }
+            else {
+                displaysmaxduration= maxDurationBySeniority; 
+                      }
 
             // Vérifier la limite d'âge
             const maxLoanEndAge = 60;
@@ -338,6 +341,9 @@
                 alert(`Durée ajustée à ${loanDuration} mois pour respecter la limite d'âge de 60 ans.`);
                 displaysmaxduration= maxDurationByAge;
             }
+            else {
+                displaysmaxduration= maxDurationBySeniority; 
+                      }
 
 
 
