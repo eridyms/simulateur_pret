@@ -279,8 +279,9 @@
             const seniority = parseInt(document.getElementById("seniority").value);
             const age = parseInt(document.getElementById("age").value);
            // const loanDuration = parseInt(document.getElementById("loanDuration").value);
+            let loanDuration = parseInt(document.getElementById("loanDuration").value);
   // mes ajouts
-        
+    /*   
         let loanDuration = parseInt(document.getElementById("loanDuration").value);
         // Déterminer la durée maximale en fonction de l'ancienneté
         let maxDuration;
@@ -303,7 +304,44 @@
             alert("La durée du prêt doit être valide en fonction de l'âge.");
             return;
         }
-          
+            */
+// Mes nouveau ajouts
+ // Définir la durée maximale autorisée en fonction de l'ancienneté
+            let maxDurationBySeniority;
+            if (seniority >= 2 && seniority <= 5) {
+                maxDurationBySeniority = 36;
+            } else if (seniority > 5 && seniority <= 10) {
+                maxDurationBySeniority = 60;
+            } else if (seniority > 10 && seniority <= 15) {
+                maxDurationBySeniority = 84;
+            } else if (seniority > 15) {
+                maxDurationBySeniority = 120;
+            } else {
+                alert("Ancienneté insuffisante pour bénéficier d'un prêt.");
+                return;
+            }
+            let displaysmaxduration;
+            // Ajuster la durée si elle dépasse la limite définie par l'ancienneté
+            if (loanDuration > maxDurationBySeniority) {
+                loanDuration = maxDurationBySeniority;
+                alert(`Durée ajustée à ${loanDuration} mois en fonction de l'ancienneté.`);
+                displaysmaxduration= maxDurationBySeniority;
+            }
+
+            // Vérifier la limite d'âge
+            const maxLoanEndAge = 60;
+            const possibleLoanEndAge = age + loanDuration / 12;
+            if (possibleLoanEndAge > maxLoanEndAge) {
+                const maxDurationByAge = (maxLoanEndAge - age) * 12;
+                loanDuration = Math.min(loanDuration, maxDurationByAge);
+                alert(`Durée ajustée à ${loanDuration} mois pour respecter la limite d'âge de 60 ans.`);
+                displaysmaxduration= maxDurationByAge;
+            }
+
+
+
+
+            
             // Calculer le salaire net considéré
             let salaryNetConsidered = salary - cnss - ipts - caisseSecours;
 
@@ -320,7 +358,7 @@
             document.getElementById("displayNetConsidered").innerText = salaryNetConsidered.toFixed(2) + " FCFA";
             document.getElementById("displayQuotity").innerText = maxLoanPayment.toFixed(2) + " FCFA";
             document.getElementById("displayLoanDuration").innerText = loanDuration + " mois";
-            document.getElementById("displaymaxAllowedDurationByAge").innerText = maxAllowedDurationByAge + " mois";
+            document.getElementById("displaymaxAllowedDurationByAge").innerText = displaysmaxduration + " mois";
             document.getElementById("consideredData").style.display = "block";
 
             // Taux d'intérêt mensuel
