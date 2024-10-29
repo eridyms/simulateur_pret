@@ -181,13 +181,13 @@
             <label for="salary">TOTAL GAINS (en FCFA) :</label>
             <input type="number" id="salary" name="salary" required>
 
-            <label for="cnss">Montant Cotisation CNSS (en FCFA) :</label>
+            <label for="cnss">RETENU CNSS (en FCFA) :</label>
             <input type="number" id="cnss" name="cnss" required>
 
-            <label for="ipts">Montant IPTS (en FCFA) :</label>
+            <label for="ipts">RETENUE de l'ITS DU MOIS (en FCFA) :</label>
             <input type="number" id="ipts" name="ipts" required>
 
-            <label for="caisseSecours">Montant Cotisation Caisse Secours (en FCFA) :</label>
+            <label for="caisseSecours">COTISATION CAISSE SECOURS (en FCFA) :</label>
             <select id="caisseSecours" name="caisseSecours" required>
                 <option value="8000">8000 FCFA</option>
                 <option value="10000">10000 FCFA</option>
@@ -195,7 +195,7 @@
             </select>
 
             <div class="engagements" id="engagements">
-                <h3>Engagements (ajoutez si nécessaire)</h3>
+                <h3>Autres retenus mensuels (ajoutez si nécessaire)</h3>
                 <div class="engagement">
                     <label for="engagementType">Type d'engagement :</label>
                     <select class="engagementType" required onchange="updateEngagementOptions()">
@@ -254,7 +254,7 @@
             <p><strong>Mensualité :</strong> <span id="monthlyPayment"></span> FCFA</p>
             <p><strong>Date probable de debut du prélevement :</strong> <span id="beginDate"></span></p>
             <p><strong>Date probable de fin de prélevement :</strong> <span id="endDate"></span></p>
-            <p><strong>Montant Garantie solidaire :</strong> <span id="gloanAmount"></span> FCFA</p>
+            <p><strong>Montant Garantie solidaire(3%) :</strong> <span id="gloanAmount"></span> FCFA</p>
             <p><strong>Montant total à rembourser :</strong> <span id="totalRepayment"></span> FCFA</p>
             <p><strong>Montant total des intérêts :</strong> <span id="totalInterest"></span> FCFA</p>
         </div>
